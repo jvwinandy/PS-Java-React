@@ -1,4 +1,4 @@
-package br.com.banco.specifications;
+package br.com.banco.bankTransfer.specifications;
 
 import br.com.banco.bankTransfer.BankTransfer;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,6 +9,7 @@ import javax.persistence.criteria.Root;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class BankTransferWithTimePeriod implements Specification<BankTransfer> {
@@ -17,15 +18,10 @@ public class BankTransferWithTimePeriod implements Specification<BankTransfer> {
 
     public BankTransferWithTimePeriod(String startTime, String endTime) {
         if (startTime != null && endTime != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            try {
-                Date startDate = dateFormat.parse(startTime);
-                this.startTime = new Timestamp(startDate.getTime());
-                Date endDate = dateFormat.parse(endTime);
-                this.endTime = new Timestamp(endDate.getTime());
-            } catch (ParseException e) {
-                // keep a null value.
-            }
+            ZonedDateTime parsedStartTime = ZonedDateTime.parse(startTime);
+            ZonedDateTime parsedEndTime = ZonedDateTime.parse(endTime);
+            this.startTime = Timestamp.from(parsedStartTime.toInstant());
+            this.endTime = Timestamp.from(parsedEndTime.toInstant());
         }
     }
 
@@ -35,8 +31,6 @@ public class BankTransferWithTimePeriod implements Specification<BankTransfer> {
             return criteriaBuilder.isTrue((criteriaBuilder.literal(true)));
         }
 
-        System.out.println(this.startTime);
-        System.out.println(this.endTime);
         return criteriaBuilder.between(root.get("dataTransferencia"), this.startTime, this.endTime);
     }
 }

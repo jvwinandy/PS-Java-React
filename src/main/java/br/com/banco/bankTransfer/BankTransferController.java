@@ -1,9 +1,11 @@
 package br.com.banco.bankTransfer;
 
-import br.com.banco.specifications.BankTransferWithOperatorName;
-import br.com.banco.specifications.BankTransferWithTimePeriod;
+import br.com.banco.bankTransfer.specifications.BankTransferWithOperatorName;
+import br.com.banco.bankTransfer.specifications.BankTransferWithTimePeriod;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +39,12 @@ public class BankTransferController {
         Specification<BankTransfer> specifications = Specification.where(new BankTransferWithOperatorName(operatorName))
                                                                     .and(new BankTransferWithTimePeriod(startTime, endTime));
 
-        Page<BankTransfer> page = bankTransferRepository.findAll(specifications, pageable);
+        Sort sort = Sort.by(Sort.Direction.DESC, "dataTransferencia");
+        Page<BankTransfer> page = bankTransferRepository.findAll(specifications, PageRequest.of(
+                pageable.getPageNumber(),
+                Integer.MAX_VALUE,
+                pageable.getSortOr(sort)
+        ));
         return ResponseEntity.ok(page.getContent());
     }
 }

@@ -1,4 +1,4 @@
-package br.com.banco.specifications;
+package br.com.banco.bankTransfer.specifications;
 
 import br.com.banco.bankTransfer.BankTransfer;
 import org.springframework.data.jpa.domain.Specification;

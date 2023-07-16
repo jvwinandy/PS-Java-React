@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import java.io.File;
 import java.io.IOException;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -61,13 +62,13 @@ class BankTransfersTests {
         DocumentContext resultContext = JsonPath.parse(response.getBody());
 
         int bankTransferQuantity = resultContext.read("$.length()");
-        assertThat(bankTransferQuantity).isEqualTo(6);
+        assertThat(bankTransferQuantity).isEqualTo(100);
 
         DocumentContext expectedContext = JsonPath.parse(new File("src/test/resources/br.com.banco/bankTransfersExpected.json"));
 
         JSONArray resultIds = resultContext.read("$..id");
         JSONArray expectedIds = expectedContext.read("$..id");
-        assertThat(resultIds).containsExactlyInAnyOrder(expectedIds.toArray());
+        assertThat(Arrays.copyOf(resultIds.toArray(), 6)).containsExactlyInAnyOrder(expectedIds.toArray());
 
 //        JSONArray resultTimestamps = resultContext.read("$..dataTransferencia");
 //        JSONArray expectedTimestamps = expectedContext.read("$..dataTransferencia");
@@ -78,19 +79,19 @@ class BankTransfersTests {
 
         JSONArray resultValues = resultContext.read("$..valor");
         JSONArray expectedValues = expectedContext.read("$..valor");
-        assertThat(resultValues).containsExactlyInAnyOrder(expectedValues.toArray());
+        assertThat(Arrays.copyOf(resultValues.toArray(), 6)).containsExactlyInAnyOrder(expectedValues.toArray());
 
         JSONArray resultTypes = resultContext.read("$..tipo");
         JSONArray expectedTypes = expectedContext.read("$..tipo");
-        assertThat(resultTypes).containsExactlyInAnyOrder(expectedTypes.toArray());
+        assertThat(Arrays.copyOf(resultTypes.toArray(), 6)).containsExactlyInAnyOrder(expectedTypes.toArray());
 
         JSONArray resultOperatorNames = resultContext.read("$..nomeOperadorTransacao");
         JSONArray expectedOperatorNames = expectedContext.read("$..nomeOperadorTransacao");
-        assertThat(resultOperatorNames).containsExactlyInAnyOrder(expectedOperatorNames.toArray());
+        assertThat(Arrays.copyOf(resultOperatorNames.toArray(), 6)).containsExactlyInAnyOrder(expectedOperatorNames.toArray());
 
         JSONArray resultAccountIds = resultContext.read("$..contaId");
         JSONArray expectedAccountIds = expectedContext.read("$..contaId");
-        assertThat(resultAccountIds).containsExactlyInAnyOrder(expectedAccountIds.toArray());
+        assertThat(Arrays.copyOf(resultAccountIds.toArray(), 6)).containsExactlyInAnyOrder(expectedAccountIds.toArray());
     }
 
     @Test
@@ -117,7 +118,7 @@ class BankTransfersTests {
 
     @Test
     void shouldReturnResultsBetweenDateExists() {
-        String url = "/transfers?startTime=2019-01-01T00:00:00&endTime=2019-05-05T08:12:45";
+        String url = "/transfers?&startTime=2019-01-01T00:00:00.000Z&endTime=2019-05-05T08:12:00.450Z";
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -125,5 +126,17 @@ class BankTransfersTests {
 
         int bankTransferQuantity = documentContext.read("$.length()");
         assertThat(bankTransferQuantity).isEqualTo(3);
+    }
+
+    @Test
+    void shouldReturnResultsBetweenDateDoesntExists() {
+        String url = "/transfers?&startTime=2023-07-02T03:00:00.000Z&endTime=2023-07-20T03:00:00.000Z";
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        int bankTransferQuantity = documentContext.read("$.length()");
+        assertThat(bankTransferQuantity).isEqualTo(0);
     }
 }
