@@ -1,6 +1,7 @@
 package br.com.banco;
 
 import br.com.banco.specifications.BankTransferWithOperatorName;
+import br.com.banco.specifications.BankTransferWithTimePeriod;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,8 +27,14 @@ public class BankTransferController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BankTransfer>> findAll(@RequestParam(required = false) String operatorName, Pageable pageable) {
-        Specification<BankTransfer> specifications = Specification.where(new BankTransferWithOperatorName(operatorName));
+    public ResponseEntity<List<BankTransfer>> findAll(
+            @RequestParam(required = false) String operatorName,
+            @RequestParam(required = false) String startTime,
+            @RequestParam(required = false) String endTime,
+            Pageable pageable) {
+
+        Specification<BankTransfer> specifications = Specification.where(new BankTransferWithOperatorName(operatorName))
+                                                                    .and(new BankTransferWithTimePeriod(startTime, endTime));
 
         Page<BankTransfer> page = bankTransferRepository.findAll(specifications, pageable);
         return ResponseEntity.ok(page.getContent());

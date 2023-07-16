@@ -105,7 +105,7 @@ class BankTransfersTests {
     }
 
     @Test
-    void shouldFilterByNomeOperadorTransacaoNameDoesntExists() {
+    void shouldFilterByNomeOperadorTransacaoNameDoesntExist() {
         ResponseEntity<String> response = restTemplate.getForEntity("/transfers?operatorName=Ciclano", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -113,5 +113,17 @@ class BankTransfersTests {
 
         int bankTransferQuantity = documentContext.read("$.length()");
         assertThat(bankTransferQuantity).isEqualTo(0);
+    }
+
+    @Test
+    void shouldReturnResultsBetweenDateExists() {
+        String url = "/transfers?startTime=2019-01-01T00:00:00&endTime=2019-05-05T08:12:45";
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        int bankTransferQuantity = documentContext.read("$.length()");
+        assertThat(bankTransferQuantity).isEqualTo(3);
     }
 }
