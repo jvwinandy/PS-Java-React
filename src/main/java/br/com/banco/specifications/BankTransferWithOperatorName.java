@@ -1,6 +1,6 @@
 package br.com.banco.specifications;
 
-import br.com.banco.BankTransfer;
+import br.com.banco.bankTransfer.BankTransfer;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;

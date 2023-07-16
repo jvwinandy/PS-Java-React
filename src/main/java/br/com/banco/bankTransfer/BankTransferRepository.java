@@ -1,4 +1,4 @@
-package br.com.banco;
+package br.com.banco.bankTransfer;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;

@@ -1,4 +1,4 @@
-package br.com.banco;
+package br.com.banco.bankTransfer;
 
 import br.com.banco.specifications.BankTransferWithOperatorName;
 import br.com.banco.specifications.BankTransferWithTimePeriod;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/transfers")
 public class BankTransferController {
     private final BankTransferRepository bankTransferRepository;

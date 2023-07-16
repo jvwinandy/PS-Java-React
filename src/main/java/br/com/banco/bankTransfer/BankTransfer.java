@@ -1,4 +1,4 @@
-package br.com.banco;
+package br.com.banco.bankTransfer;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
