@@ -1,8 +1,13 @@
 package br.com.banco;
 
+import br.com.banco.specifications.BankTransferWithOperatorName;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -21,8 +26,10 @@ public class BankTransferController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<BankTransfer>> findAll(@RequestParam(required = false) String operatorName) {
+    public ResponseEntity<List<BankTransfer>> findAll(@RequestParam(required = false) String operatorName, Pageable pageable) {
+        Specification<BankTransfer> specifications = Specification.where(new BankTransferWithOperatorName(operatorName));
 
-        return ResponseEntity.ok(bankTransferRepository.findAll());
+        Page<BankTransfer> page = bankTransferRepository.findAll(specifications, pageable);
+        return ResponseEntity.ok(page.getContent());
     }
 }

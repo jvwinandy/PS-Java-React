@@ -93,8 +93,9 @@ class BankTransfersTests {
         assertThat(resultAccountIds).containsExactlyInAnyOrder(expectedAccountIds.toArray());
     }
 
-    void shouldFilterByNomeOperadorTransacao() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/transfers?operatorName='Beltrano'", String.class);
+    @Test
+    void shouldFilterByNomeOperadorTransacaoNameExists() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/transfers?operatorName=Beltrano", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
@@ -103,4 +104,14 @@ class BankTransfersTests {
         assertThat(bankTransferQuantity).isEqualTo(1);
     }
 
+    @Test
+    void shouldFilterByNomeOperadorTransacaoNameDoesntExists() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/transfers?operatorName=Ciclano", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        int bankTransferQuantity = documentContext.read("$.length()");
+        assertThat(bankTransferQuantity).isEqualTo(0);
+    }
 }
