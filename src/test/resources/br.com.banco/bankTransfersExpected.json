@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "dataTransferencia": "2019-01-01T12:00:00+03",
+    "valor": 30895.46,
+    "tipo": "DEPOSITO",
+    "nomeOperadorTransacao": null,
+    "contaId": 1
+  },
+  {
+    "id": 2,
+    "dataTransferencia": "2019-02-03T09:53:27+03",
+    "valor": 12.24,
+    "tipo": "DEPOSITO",
+    "nomeOperadorTransacao": null,
+    "contaId": 2
+  },
+  {
+    "id": 3,
+    "dataTransferencia": "2019-05-04T08:12:45+03",
+    "valor": -500.50,
+    "tipo": "SAQUE",
+    "nomeOperadorTransacao": null,
+    "contaId": 1
+  },
+  {
+    "id": 4,
+    "dataTransferencia": "2019-08-07T08:12:45+03",
+    "valor": -530.50,
+    "tipo": "SAQUE",
+    "nomeOperadorTransacao": null,
+    "contaId": 2
+  },
+  {
+    "id": 5,
+    "dataTransferencia": "2020-06-08T10:15:01+03",
+    "valor": 3241.23,
+    "tipo": "TRANSFERENCIA",
+    "nomeOperadorTransacao": "Beltrano",
+    "contaId": 1
+  },
+  {
+    "id": 6,
+    "dataTransferencia": "2021-04-01T12:12:04+03",
+    "valor": 25173.09,
+    "tipo": "TRANSFERENCIA",
+    "nomeOperadorTransacao": "Ronnyscley",
+    "contaId": 2
+  }
+]
