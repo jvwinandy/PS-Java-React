@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -49,5 +50,11 @@ public class BankTransferController {
                 pageable.getSortOr(sort)
         ));
         return ResponseEntity.ok(page.getContent());
+    }
+
+    @GetMapping("/operators")
+    public ResponseEntity<Set<String>> findDistinctNomeOperadorTransacao() {
+        Set<String> operators = bankTransferRepository.findDistinctNomeOperadorTransacao();
+        return ResponseEntity.ok(operators);
     }
 }
