@@ -55,7 +55,7 @@ class BankTransfersTests {
     }
 
     @Test
-    void shouldReturnAllBankTransfer() throws IOException {
+    void shouldReturnAllBankTransfers() throws IOException {
         ResponseEntity<String> response = restTemplate.getForEntity("/transfers", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -69,13 +69,6 @@ class BankTransfersTests {
         JSONArray resultIds = resultContext.read("$..id");
         JSONArray expectedIds = expectedContext.read("$..id");
         assertThat(Arrays.copyOf(resultIds.toArray(), 6)).containsExactlyInAnyOrder(expectedIds.toArray());
-
-//        JSONArray resultTimestamps = resultContext.read("$..dataTransferencia");
-//        JSONArray expectedTimestamps = expectedContext.read("$..dataTransferencia");
-//        List<ZonedDateTime>
-
-        //        ZonedDateTime timestamp = ZonedDateTime.parse(documentContext.read("$.dataTransferencia"));
-//        assertThat(timestamp).isEqualTo(ZonedDateTime.parse("2019-01-01T12:00:00+03"));
 
         JSONArray resultValues = resultContext.read("$..valor");
         JSONArray expectedValues = expectedContext.read("$..valor");
@@ -138,5 +131,27 @@ class BankTransfersTests {
 
         int bankTransferQuantity = documentContext.read("$.length()");
         assertThat(bankTransferQuantity).isEqualTo(0);
+    }
+
+    @Test
+    void shouldFilterByAccountId1() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/transfers?accountId=1", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        int bankTransferQuantity = documentContext.read("$.length()");
+        assertThat(bankTransferQuantity).isEqualTo(53);
+    }
+
+    @Test
+    void shouldFilterByAccountId2() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/transfers?accountId=2", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        int bankTransferQuantity = documentContext.read("$.length()");
+        assertThat(bankTransferQuantity).isEqualTo(47);
     }
 }

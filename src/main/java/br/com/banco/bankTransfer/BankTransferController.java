@@ -1,5 +1,6 @@
 package br.com.banco.bankTransfer;
 
+import br.com.banco.bankTransfer.specifications.BankTransferWithAccountId;
 import br.com.banco.bankTransfer.specifications.BankTransferWithOperatorName;
 import br.com.banco.bankTransfer.specifications.BankTransferWithTimePeriod;
 import org.springframework.data.domain.Page;
@@ -31,12 +32,14 @@ public class BankTransferController {
 
     @GetMapping
     public ResponseEntity<List<BankTransfer>> findAll(
+            @RequestParam(required = false) Long accountId,
             @RequestParam(required = false) String operatorName,
             @RequestParam(required = false) String startTime,
             @RequestParam(required = false) String endTime,
             Pageable pageable) {
 
-        Specification<BankTransfer> specifications = Specification.where(new BankTransferWithOperatorName(operatorName))
+        Specification<BankTransfer> specifications = Specification.where(new BankTransferWithAccountId(accountId))
+                                                                    .and(new BankTransferWithOperatorName(operatorName))
                                                                     .and(new BankTransferWithTimePeriod(startTime, endTime));
 
         Sort sort = Sort.by(Sort.Direction.DESC, "dataTransferencia");
